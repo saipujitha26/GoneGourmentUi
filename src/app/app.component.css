@@ -1,0 +1,54 @@
+.container {
+    width: 400px;
+    margin: 20px auto;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #00a884;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .dropdown-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .dropdown {
+    width: 100%;
+  }
+  
+  .submit-container {
+    margin-top: 20px;
+  }
+  
+  .submit-container button {
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: #00a884;
+    color: white;
+    width: 100%;
+  }
+  
+  .submit-container button:hover {
+    background-color: #007c5f;
+  }
+  
+  .table-container {
+    margin-top: 30px;
+    overflow: auto;
+  }
+  
+  mat-table {
+    width: 100%;
+  }
+  
+  mat-header-cell, mat-cell {
+    padding: 10px;
+    text-align: center;
+  }
+  
