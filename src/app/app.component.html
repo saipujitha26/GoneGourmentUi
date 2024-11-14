@@ -22,8 +22,8 @@
         <mat-form-field appearance="outline" class="dropdown">
           <mat-label>Select a City</mat-label>
           <mat-select [(ngModel)]="selectedCity">
-            <mat-option *ngFor="let city of cities" [value]="city">
-              {{ city }}
+            <mat-option *ngFor="let city of cities" [value]="city.id">
+              {{ city.city }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -38,7 +38,7 @@
 
   <!-- Table for Unavailable Items -->
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <ng-container matColumnDef="srNo">
         <th mat-header-cell *matHeaderCellDef> SR. NO </th>
         <td mat-cell *matCellDef="let element"> {{element.srNo}} </td>

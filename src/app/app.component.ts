@@ -1,12 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { ApiService } from './services/api.service';
+
 
 interface Brand {
   id: number;
   name: string;
 }
 
-interface FoodItem {
+interface Location {
+  id: number;
+  name: string;
+}
+
+interface UnavailableItem {
   srNo: number;
   foodItems: string;
 }
@@ -16,46 +23,49 @@ interface FoodItem {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   selectedBrand: number | null = null;
-  selectedCity: string | null = null;
+  selectedCity: number | null = null;
 
-  brands: Brand[] = [
-    { id: 1, name: "Arby's Restaurant" },
-    { id: 2, name: 'Burger King' },
-    { id: 3, name: 'Subway' }
-  ];
-
-  cities: string[] = ['ROME', 'GENEVA', 'HAMBURG', 'NEW YORK'];
+  brands: Brand[] = [];
+  cities: any;
 
   displayedColumns: string[] = ['srNo', 'foodItems'];
-  dataSource = new MatTableDataSource<FoodItem>([]);
+  dataSource = new MatTableDataSource<UnavailableItem>([]);
+
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    // Fetch all brands on component initialization
+    this.apiService.getBrands().subscribe((data: Brand[]) => {
+      this.brands = data;
+      console.log(data);
+    });
+    this.apiService.getLocations(1).subscribe((data: any) => {
+      this.cities = data;
+      console.log(data);
+    });
+    
+  }
 
   onBrandChange() {
-    // Update the table data based on selected brand
-    this.dataSource.data = this.getUnavailableItems(this.selectedBrand);
+    if (this.selectedBrand !== null) {
+      // Fetch cities based on selected brand
+      this.apiService.getLocations(this.selectedBrand).subscribe((data: Location[]) => {
+        this.cities = data;
+        console.log(data);
+      });
+    }
   }
 
   onSubmit() {
-    if (!this.selectedBrand || !this.selectedCity) {
-      alert('Please select both brand and city!');
-      return;
-    }
-    // You can make an API call here to fetch unavailable items for the selected brand and city
-    console.log('Form submitted with Brand: ', this.selectedBrand, ' City: ', this.selectedCity);
-    // Update the table data based on the selected city and brand
-    this.dataSource.data = this.getUnavailableItems(this.selectedBrand);
-  }
-
-  getUnavailableItems(brandId: number | null): FoodItem[] {
-    // This method should retrieve the list of unavailable items based on the selected brand
-    // Sample data
-    if (brandId === 1) {
-      return [{ srNo: 1, foodItems: 'French Fries' }];
-    } else if (brandId === 2) {
-      return [{ srNo: 1, foodItems: 'Onion Rings' }];
+    if (this.selectedBrand && this.selectedCity) {
+      // Fetch unavailable items based on selected brand and location
+      this.apiService.getUnavailableItems(this.selectedCity).subscribe((data: UnavailableItem[]) => {
+        this.dataSource.data = data.map((item, index) => ({ srNo: index + 1, foodItems: item.foodItems }));
+      });
     } else {
-      return [];
+      alert('Please select both brand and city!');
     }
   }
 }

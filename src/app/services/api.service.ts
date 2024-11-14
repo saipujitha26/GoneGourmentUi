@@ -14,8 +14,8 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/brands`);
   }
 
-  getLocations(brandId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/locations/${brandId}`);
+  getLocations(selectedBrand: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/locations`);
   }
 
   getUnavailableItems(locationId: number): Observable<any> {
